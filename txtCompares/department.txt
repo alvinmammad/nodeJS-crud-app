@@ -1,0 +1,25 @@
+else {
+    $positionid = $(this).data("id");
+    let data = {
+      name: $("#posName").val(),
+      department: $("#posDepartment").val(),
+    };
+
+    $.ajax({
+      url: "/api/v1/positions/" + $positionid,
+      type: "patch",
+      dataType: "json",
+      data: data,
+      success: function (response) {
+        console.log(response);
+        let tr = $("tr[data-id='" + response.result.id + "']");
+        tr.find("td").eq(0).text(response.result.name);
+        tr.find("td").eq(1).text(response.result.department.name);
+        $("#position-modal").modal("hide");
+        toastr.success("Position updated !");
+      },
+      error: function (err) {
+        console.log(err);
+      },
+    });
+  }

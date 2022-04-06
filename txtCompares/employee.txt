@@ -1,0 +1,255 @@
+GET ALL EMPLOYEES :
+
+function getAllEmployees() {
+  if ($("#employeeList").length) {
+    $.ajax({
+      type: "GET",
+      contentType: "application/json",
+      dataType: "json",
+      url: "/api/v1/employees",
+      success: function (employees) {
+        if ($("#employeeList").hasClass("d-none")) {
+          $("#employeeList").removeClass("d-none");
+          $("#departmentList").addClass("d-none");
+          $("#positionList").addClass("d-none");
+        }
+
+        $("#employeeList tbody").empty();
+        for (const employee in employees) {
+          let tr = `<tr data-id="${employees[employee].id}">
+        <td>${employees[employee].name}</td>
+        <td>${employees[employee].surname}</td>
+        <td>${employees[employee].age}</td>
+        <td>${employees[employee].salary} ₼</td>
+        <td>${employees[employee].phone}</td>
+        <td>${employees[employee].email}</td>
+        <td>${employees[employee].position.name}</td>
+        <td>
+          <a class="editEmployee">
+          <i class="fas fa-pen"></i>        
+          </a>
+          <a class="deleteEmployee">
+          <i class="fas fa-trash"></i>        
+          </a>
+        </td>
+    </tr>`;
+          $("#employeeList tbody").append(tr);
+        }
+      },
+      error: function (err) {
+        console.log(err);
+      },
+    });
+
+    $("#employee-modal").on("show.bs.modal", function () {
+      getPositions();
+    });
+    $("#employee-modal").on("hidden.bs.modal", function () {
+      if ($(this).data("type") == "update") {
+        $("input[name='Name']").val("");
+        $("input[name='Surname']").val("");
+        $("input[name='Age']").val("");
+        $("input[name='Salary']").val("");
+        $("input[name='Phone']").val("");
+        $("input[name='Email']").val("");
+        $("#employee-modal .modal-title").text("New employee");
+        $("#add-employee").text("Add employee");
+        $("#employee-form").data("type", "create");
+        $("#employee-form").removeData("id");
+        $(this).data("type", "create");
+      }
+    });
+  }
+}
+
+EMPLOYEE CRUD :
+
+$("#add-employee").click(function () {
+  $("#employee-form").submit();
+});
+
+
+//CREATE AND UPDATE EMPLOYEE :
+
+$("#employee-form").submit(function (e) {
+  e.preventDefault();
+  if ($(this).data("type") === "create") {
+    let data = {
+      name: $("#Name").val(),
+      surname: $("#Surname").val(),
+      age: $("#Age").val(),
+      salary: $("#Salary").val(),
+      phone: $("#Phone").val(),
+      email: $("#Email").val(),
+      position: $("#position").val(),
+    };
+
+    $.ajax({
+      url: "/api/v1/employees",
+      type: "post",
+      dataType: "json",
+      data: data,
+      success: function (response) {
+        // console.log(response.data.employee);
+
+        let tr = `<tr data-id="${response.data.employee.id}">
+        <td>${response.data.employee.name}</td>
+        <td>${response.data.employee.surname}</td>
+        <td>${response.data.employee.age}</td>
+        <td>${response.data.employee.salary}</td>
+        <td>${response.data.employee.phone}</td>
+        <td>${response.data.employee.email}</td>
+        <td>${response.data.employee.position.name}</td>
+        <td>
+          <a class="editEmployee">
+          <i class="fas fa-pen"></i>       
+          </a>
+          <a class="deleteEmployee">
+          <i class="fas fa-trash-alt"></i>        
+          </a>
+        </td>
+    </tr>`;
+        $("#employeeList tbody").append(tr);
+        $("#employee-modal").modal("hide");
+        toastr.success("Employee added !");
+      },
+      error: function (err) {
+        console.log(err.responseJSON);
+      },
+    });
+  } else {
+    $employeeid = $(this).data("id");
+    let data = {
+      name: $("#Name").val(),
+      surname: $("#Surname").val(),
+      age: $("#Age").val(),
+      salary: $("#Salary").val(),
+      phone: $("#Phone").val(),
+      email: $("#Email").val(),
+      position: $("#position").val(),
+    };
+
+    $.ajax({
+      url: "/api/v1/employees/" + $employeeid,
+      type: "patch",
+      dataType: "json",
+      data: data,
+      success: function (response) {
+        console.log(response.result);
+        let tr = $("tr[data-id='" + response.result.id + "']");
+        tr.find("td").eq(0).text(response.result.name);
+        tr.find("td").eq(1).text(response.result.surname);
+        tr.find("td").eq(2).text(response.result.age);
+        tr.find("td").eq(3).text(response.result.salary);
+        tr.find("td").eq(4).text(response.result.phone);
+        tr.find("td").eq(5).text(response.result.email);
+        tr.find("td").eq(6).text(response.result.position.name);
+
+        // console.log(response.data.employee.position);
+        $("#employee-modal").modal("hide");
+        toastr.success("Employee updated !");
+      },
+      error: function (err) {
+        console.log(err);
+      },
+    });
+  }
+});
+
+
+//DELETE EMPLOYEE :
+
+$(document).on("click", ".deleteEmployee", function (e) {
+  e.preventDefault();
+  var $employeeid = $(this).parents("tr").data("id");
+  // console.log($employeeid);
+  swal({
+    title: "Delete employee",
+    text: "Are you sure for delete employee ?",
+    icon: "warning",
+    buttons: {
+      cancel: {
+        text: "No",
+        value: null,
+        visible: true,
+        className: "",
+        closeModal: true,
+      },
+      confirm: {
+        text: "Yes",
+        value: true,
+        visible: true,
+        className: "",
+        closeModal: true,
+      },
+    },
+  }).then((value) => {
+    if (value) {
+      $.ajax({
+        url: "/api/v1/employees/" + $employeeid,
+        type: "delete",
+        dataType: "json",
+        success: function (response) {
+          $("tr[data-id='" + $employeeid + "']").remove();
+          toastr.success("Employee removed !");
+        },
+        error: function () {
+          toastr.warning("Employee not found :/");
+        },
+      });
+    }
+  });
+});
+
+
+//OPEN UPDATE MODAL
+
+$(document).on("click", ".editEmployee", function (e) {
+  e.preventDefault();
+  let $employeeid = $(this).parents("tr").data("id");
+  // console.log($employeeid)
+  $.getJSON("/api/v1/employees/" + $employeeid, function (response) {
+    $("input[name='Name']").val(response.employee.name);
+    $("input[name='Surname']").val(response.employee.surname);
+    $("input[name='Age']").val(response.employee.age);
+    $("input[name='Salary']").val(response.employee.salary);
+    $("input[name='Phone']").val(response.employee.phone);
+    $("input[name='Email']").val(response.employee.email);
+    $("#employee-modal .modal-title").text(
+      response.employee.name + " " + response.employee.surname
+    );
+    $("#add-employee").text("Update");
+    $("#employee-modal").modal("show");
+    $("#employee-form").data("type", "update");
+    $("#employee-form").data("id", $employeeid);
+    setTimeout(function () {
+      $("select[name='Position']").val(response.employee.position.id);
+    }, 500);
+  });
+  // $.ajax({
+  //   url: "/api/v1/employees/" + $employeeid,
+  //   type: "get",
+  //   dataType: "json",
+  //   success: function (response) {
+  //     // console.log(response);
+  //     $("input[name='Name']").val(response.employee.name);
+  //     $("input[name='Surname']").val(response.employee.surname);
+  //     $("input[name='Age']").val(response.employee.surname);
+  //     $("input[name='Salary']").val(response.employee.surname);
+  //     $("input[name='Phone']").val(response.employee.surname);
+  //     $("input[name='Email']").val(response.employee.surname);
+
+  //     $("#employee-modal .modal-title").text(
+  //       response.employee.name + " " + response.employee.surname
+  //     );
+  //     $("#employee-modal #add-employee").text("Update");
+  //     $("#employee-form").data("type", "update");
+  //     $("#employee-form").data("id", $employeeid);
+  //     $("#employee-modal").modal("show");
+  //     setTimeout(function () {
+  //       $("select[name='Position']").val(response.employee.position.id);
+  //     }, 500);
+  //     // console.log(response.employee.name);
+  //   },
+  // });
+});

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.1/css/bootstrap.min.css"
+        integrity="sha512-6KY5s6UI5J7SVYuZB4S/CZMyPylqyyNZco376NM2Z8Sb8OxEdp02e1jkKk/wZxIEmjQ6DRCEBhni+gpr9c4tvA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+        integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <header class="bg-dark text-white">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link text-white" id="getEmployees">
+                        <i class="fas fa-user"></i>
+                        Employees
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" id="getDepartments">
+                        <i class="fas fa-code-branch"></i>
+                        Departments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" id="getPositions">
+                        <i class="fas fa-map-marker"></i>
+                        Positions
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+
+    </header>
+    <!-- Employee list -->
+    <div class="container-fluid">
+        <div class="row d-none" id="employeeList">
+
+            <div class="col-md-12">
+                <ul class="nav justify-content-center me-lg-auto mb-md-0">
+                    
+                        <li class="nav-item">
+                            <button type="button" class="btn btn-outline-primary" id="btn-create" data-bs-toggle="modal"
+                                data-bs-target="#employee-modal">
+                                Yeni işçi
+                            </button>
+                        </li>
+
+                    
+                    <!-- <div class="col-md-2">
+                        <li class="nav-item">
+                            <input type="text" class="form-control" id="searchByName" placeholder="Search by name">
+                        </li>
+                    </div> -->
+                   
+
+
+                </ul>
+
+
+                <table class="table table-bordered shadow-lg p-3 mb-5 bg-white rounded" id="employee-datatable">
+                    <thead>
+                        <tr>
+                            <th class="asc sortable" data-sort="name">Name</th>
+                            <th class="asc sortable" data-sort="surname">Surname</th>
+                            <th class="asc sortable" data-sort="age">Age</th>
+                            <th class="asc sortable" data-sort="salary">Salary</th>
+                            <th>Phone</th>
+                            <th>eMail</th>
+                            <th class="asc sortable" data-sort="position">Position</th>
+                            <th>Edit / Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+    <!-- Department list -->
+    <div class="container-fluid">
+        <div class="row d-none" id="departmentList">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                    data-bs-target="#department-modal">
+                    Yeni şöbə
+                </button>
+                <table class="table table-bordered shadow-lg p-3 mb-5 bg-white rounded" id="department-datatable">
+                    <thead>
+                        <tr>
+                            <th class="asc sortable-dep" data-sort="name">Name</th>
+                            <th class="asc sortable-dep" data-sort="manager">Manager</th>
+                            <th>Edit / Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Position list -->
+    <div class="container-fluid">
+        <div class="row d-none" id="positionList">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                    data-bs-target="#position-modal">
+                    Yeni vəzifə
+                </button>
+                <table class="table table-bordered shadow-lg p-3 mb-5 bg-white rounded">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Edit / Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Employee Modal -->
+    <div class="modal fade" data-type="create" id="employee-modal" tabindex="-1" role="dialog"
+        aria-labelledby="employee-formLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="employee-form" data-type="create">
+                        <div class="form-group">
+                            <label for="Name">Name</label>
+                            <input type="text" class="form-control" name="Name" id="Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="Surname">Surname</label>
+                            <input type="text" class="form-control" name="Surname" id="Surname">
+                        </div>
+                        <div class="form-group">
+                            <label for="Age">Age</label>
+                            <input type="text" class="form-control" name="Age" id="Age">
+                        </div>
+                        <div class="form-group">
+                            <label for="Salary">Salary</label>
+                            <input type="text" class="form-control" name="Salary" id="Salary">
+                        </div>
+                        <div class="form-group">
+                            <label for="Phone">Phone (+994)</label>
+                            <input type="text" class="form-control" name="Phone" id="Phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="Email">Email</label>
+                            <input type="text" class="form-control" name="Email" id="Email">
+                        </div>
+                        <div class="form-group">
+                            <label for="Position">Position</label>
+                            <select class="form-control" name="Position" id="Position">
+                            </select>
+                        </div>
+
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="add-employee" class="btn btn-primary">Add employee</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Department Modal -->
+    <div class="modal fade" data-type="create" id="department-modal" tabindex="-1" role="dialog"
+        aria-labelledby="department-formLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <!-- <span aria-hidden="true">&times;</span> -->
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="department-form" data-type="create">
+                        <div class="form-group">
+                            <label for="depName">Name</label>
+                            <input type="text" class="form-control" name="depName" id="depName">
+                        </div>
+                        <div class="form-group">
+                            <label for="depManager">Manager</label>
+                            <input type="text" class="form-control" name="depManager" id="depManager">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="add-department" class="btn btn-primary">Add department</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Position modal -->
+    <div class="modal fade" data-type="create" id="position-modal" tabindex="-1" role="dialog"
+        aria-labelledby="position-formLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <!-- <span aria-hidden="true">&times;</span> -->
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="position-form" data-type="create">
+                        <div class="form-group">
+                            <label for="posName">Name</label>
+                            <input type="text" class="form-control" name="posName" id="posName">
+                        </div>
+                        <div class="form-group">
+                            <label for="posDepartment">Position</label>
+                            <select class="form-control" name="posDepartment" id="posDepartment">
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="add-position" class="btn btn-primary">Add position</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <select class="form-control">
+        <optgroup label="Egypt" data-group="Africa">
+            <option value="" style="margin-left:23px;">Alexandria</option>
+            <option value="">Cairo</option>
+        </optgroup>
+        <optgroup label="Morocoo" data-group="Africa">
+            <option value="">Casablanca</option>
+            <option value="">El Rabat</option>
+        </optgroup>
+        <optgroup label="USA" data-group="North America">
+            <option value="">New York</option>
+            <option value="">Nashville</option>
+        </optgroup>
+        <optgroup label="Canada" data-group="North America">
+            <option value="">Toronto</option>
+        </optgroup>
+    </select> -->
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.1/umd/popper.min.js"
+        integrity="sha512-8jeQKzUKh/0pqnK24AfqZYxlQ8JdQjl9gGONwGwKbJiEaAPkD3eoIjz3IuX4IrP+dnxkchGUeWdXLazLHin+UQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js"
+        integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

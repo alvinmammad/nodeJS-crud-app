@@ -1,0 +1,115 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500&display=swap");
+body {
+  font-family: "Maven Pro", sans-serif !important;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container-fluid {
+  margin-top: 45px !important;
+}
+.table {
+  margin-top: 125px !important;
+  font-weight: 500;
+}
+
+#employee-datatable th.asc:after {
+  content: "ASC";
+  display: inline-block;
+  padding: 0 0.5em;
+  color: green;
+}
+#employee-datatable th.desc:after {
+  content: "DESC";
+  display: inline-block;
+  padding: 0 0.5em;
+  color: blue;
+}
+#department-datatable th.asc:after {
+  content: "ASC";
+  display: inline-block;
+  padding: 0 0.5em;
+  color: green;
+}
+#department-datatable th.desc:after {
+  content: "DESC";
+  display: inline-block;
+  padding: 0 0.5em;
+  color: blue;
+}
+#position-datatable th.asc:after {
+  content: "ASC";
+  display: inline-block;
+  padding: 0 0.5em;
+  color: green;
+}
+#position-datatable th.desc:after {
+  content: "DESC";
+  display: inline-block;
+  padding: 0 0.5em;
+  color: blue;
+}
+
+
+
+
+/* 
+ul {
+  background-color: whitesmoke;
+  margin: 0;
+} */
+
+/* .nav-link {
+  color: black;
+  font-size: 1.1rem;
+} */
+
+/* .nav-link:hover {
+  color: rgb(92, 92, 92);
+} */
+
+/* .active {
+  font-weight: bold;
+} */
+
+table {
+  font-size: 13px;
+}
+a {
+  text-decoration: none;
+}
+/* 
+.styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+} */
